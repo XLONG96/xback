@@ -17,7 +17,7 @@ public class UserController {
 
     @RequestMapping(value="/login-error",method=GET)
     public ModelAndView loginFail(Model model){
-        model.addAttribute("msg","username/password error");
+        model.addAttribute("msg","用户名或密码错误");
         return new ModelAndView("login");
     }
 

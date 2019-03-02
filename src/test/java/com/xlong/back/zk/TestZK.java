@@ -1,17 +1,44 @@
 package com.xlong.back.zk;
 
+import com.xlong.back.entity.Producter;
 import org.I0Itec.zkclient.ZkClient;
 import org.I0Itec.zkclient.ZkConnection;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class TestZK {
 
-    static final String CONNECT_ADDR = "120.77.246.48:2181";
+    static final String CONNECT_ADDR = "10.202.38.54:2181";
 
     static final int SESSION_OUTTIME = 10000;//ms
 
+    private static final String ZK_PROVIDER_ROOT = "/provider";
+
+    @Test
+    public void testGetData() {
+        ZKClient client = new ZKClient();
+        List<String> nodes = client.getChildrenNode(ZK_PROVIDER_ROOT);
+        if (nodes != null) {
+            for (String n : nodes) {
+                String nodePath = ZK_PROVIDER_ROOT + "/" + n;
+                String data = client.getData(nodePath);
+                System.out.println(data);
+                String[] tmp = {"", ""};
+                if (data != null) {
+                    tmp = data.split(":");
+                }
+                System.out.println(tmp);
+                Date d = client.getCreationTime(nodePath);
+                System.out.println(d);
+            }
+        }
+    }
+
+    @Ignore
     @Test
     public void ZKStartUP() throws Exception {
         ZkClient zkc = new ZkClient(new ZkConnection(CONNECT_ADDR), SESSION_OUTTIME);

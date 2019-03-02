@@ -21,4 +21,14 @@ public class HomeController {
     public ModelAndView questionList(){
         return new ModelAndView("question-list");
     }
+
+    @RequestMapping("/producter-list.html")
+    public ModelAndView producterList(){
+        return new ModelAndView("producter-list");
+    }
+
+    @RequestMapping("/consumer-list.html")
+    public ModelAndView consumerList(){
+        return new ModelAndView("consumer-list");
+    }
 }
