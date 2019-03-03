@@ -1,0 +1,138 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="renderer" content="webkit|ie-comp|ie-stand"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>权限管理</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 管理员管理 <span class="c-gray en">&gt;</span> 权限管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a href="javascript:;" onclick="admin_permission_add('添加权限节点','admin-permission-add.html','','310')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加权限节点</a></span> <span class="r">共有数据：<strong>X</strong> 条</span> </div>
+	<table class="table table-border table-bordered table-bg table-sort">
+		<thead>
+			<tr>
+				<th scope="col" colspan="7">权限节点</th>
+			</tr>
+			<tr class="text-c">
+				<th width="25"><input type="checkbox" name="" value=""/></th>
+				<th width="40">ID</th>
+				<th width="100">权限</th>
+				<th width="100">对应用户</th>
+				<th width="100">操作</th>
+			</tr>
+		</thead>
+	</table>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript">
+/* 构建表格 */
+$('.table-sort').dataTable({
+	serverSide: true,     //开启服务器模式
+	ajax: {
+		url: '/api/permissions',
+		type: 'POST',
+		dataSrc:function(result){
+			//这里除了把数据处理后返回给DataTables，还需要把另外三个参数处理为顶级的属性
+
+			result.draw = result.draw;
+			result.recordsTotal = result.totalElements;
+			result.recordsFiltered = result.totalElements;
+
+			//直接返回Datatables需要的那部分数据即可，看到这里，大家或许又懂了些什么看到了他的强大和灵活
+
+			return result.content;
+		},
+		error:function(XMLHttpRequest,textStatus){
+			alert(XMLHttpRequest.status+" "+XMLHttpRequest.readyState+" "+textStatus);
+		}
+	},
+	columns: [
+		{ data: null },
+		{ data: 'id' },
+		{ data: 'permission' },
+		{ data: 'userId' },
+		{ data:null,
+			"render": function ( data, type, full, meta ) {
+                var edithtml = '<button class="btn btn-info" onclick="admin_add()">编辑</button>' +
+                    '<button class="btn btn-info" onclick="admin_del()">删除</button>'
+                return edithtml;
+			}
+		}
+	],
+	columnDefs: [{
+		//指定第一列，从0开始，0表示第一列，1表示第二列……
+		targets: 0,
+		render: function(data, type, row, meta) {
+			return '<input type="checkbox" name="checklist" value="' + row.id + '" />'
+		}
+	}],
+	deferRender:true,  //当处理大数据时，延迟渲染数据，有效提高Datatables处理能力
+	ordering:false,
+	paging:true,
+	destroy:true,
+	bFilter:false,    //去掉搜索框
+	processing: true
+});
+
+
+/*
+	参数解释：
+	title	标题
+	url		请求的url
+	id		需要操作的数据id
+	w		弹出层宽度（缺省调默认值）
+	h		弹出层高度（缺省调默认值）
+*/
+/*管理员-权限-添加*/
+function admin_permission_add(title,url,w,h){
+	layer_show(title,url,w,h);
+}
+/*管理员-权限-编辑*/
+function admin_permission_edit(title,url,id,w,h){
+	layer_show(title,url,w,h);
+}
+
+/*管理员-权限-删除*/
+function admin_permission_del(obj,id){
+	layer.confirm('确认要删除吗？',function(index){
+		$.ajax({
+			type: 'POST',
+			url: '',
+			dataType: 'json',
+			success: function(data){
+				$(obj).parents("tr").remove();
+				layer.msg('已删除!',{icon:1,time:1000});
+			},
+			error:function(data) {
+				console.log(data.msg);
+			},
+		});		
+	});
+}
+</script>
+</body>
+</html>

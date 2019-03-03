@@ -31,4 +31,24 @@ public class HomeController {
     public ModelAndView consumerList(){
         return new ModelAndView("consumer-list");
     }
+
+    @RequestMapping("/request-list.html")
+    public ModelAndView requestList(){
+        return new ModelAndView("request-list");
+    }
+
+    @RequestMapping("/response-list.html")
+    public ModelAndView responseList(){
+        return new ModelAndView("response-list");
+    }
+
+    @RequestMapping("/admin-list.html")
+    public ModelAndView adminList(){
+        return new ModelAndView("admin-list");
+    }
+
+    @RequestMapping("/admin-permission.html")
+    public ModelAndView permissionList(){
+        return new ModelAndView("admin-permission");
+    }
 }
