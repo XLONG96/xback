@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -105,6 +107,19 @@ public class ServiceController {
         p.setTotalPages(1);
         p.setSize(size);
         return p;
+    }
+
+    @RequestMapping(value="/service_statics", method=RequestMethod.GET)
+    public Map<String, Integer> serviceStatics() {
+        List<String> productorNodes = zkClient.getChildrenNode(ZK_PROVIDER_ROOT);
+        List<String> consumerNodes = zkClient.getChildrenNode(ZK_CONSUMER_ROOT);
+        int productorNum = productorNodes.size();
+        int consumerNum = consumerNodes.size();
+        Map<String, Integer> statics_num = new HashMap<>();
+        statics_num.put("productors", productorNum);
+        statics_num.put("consumers", consumerNum);
+        logger.info("Productors : {}, Consumers : {}", productorNum, consumerNum);
+        return statics_num;
     }
 
     @RequestMapping(value="/requests", method=RequestMethod.POST)

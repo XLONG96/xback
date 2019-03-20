@@ -51,4 +51,14 @@ public class HomeController {
     public ModelAndView permissionList(){
         return new ModelAndView("admin-permission");
     }
+
+    @RequestMapping("/charts-pie.html")
+    public ModelAndView chartPie(){
+        return new ModelAndView("charts-pie");
+    }
+
+    @RequestMapping("/charts-column.html")
+    public ModelAndView chartColumn(){
+        return new ModelAndView("charts-column");
+    }
 }
