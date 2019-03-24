@@ -39,7 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .logout()
-                .logoutSuccessUrl("/index.html")
+                .logoutSuccessUrl("/login.html")
                 .and()
                 .csrf().disable()
                 .headers().frameOptions().sameOrigin();  //支持iframe

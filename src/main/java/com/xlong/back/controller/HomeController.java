@@ -53,12 +53,22 @@ public class HomeController {
     }
 
     @RequestMapping("/charts-pie.html")
-    public ModelAndView chartPie(){
+    public ModelAndView chartsPie(){
         return new ModelAndView("charts-pie");
     }
 
-    @RequestMapping("/charts-column.html")
-    public ModelAndView chartColumn(){
-        return new ModelAndView("charts-column");
+    @RequestMapping("/charts-nodes.html")
+    public ModelAndView chartsNodes(){
+        return new ModelAndView("charts-nodes");
+    }
+
+    @RequestMapping("/charts-services.html")
+    public ModelAndView chartsServices(){
+        return new ModelAndView("charts-services");
+    }
+
+    @RequestMapping("/charts-time.html")
+    public ModelAndView chartsTime(){
+        return new ModelAndView("charts-time");
     }
 }

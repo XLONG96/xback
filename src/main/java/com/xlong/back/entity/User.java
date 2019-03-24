@@ -16,6 +16,10 @@ public class User implements Serializable{
     private String phone;
     private String role;
     private String password;
+    @Column(name = "last_login")
+    private Date lastLogin;
+    @Column(name = "login_count")
+    private int loginCount;
 
     public int getId() {
         return id;
@@ -71,5 +75,21 @@ public class User implements Serializable{
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Date getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
+    public int getLoginCount() {
+        return loginCount;
+    }
+
+    public void setLoginCount(int loginCount) {
+        this.loginCount = loginCount;
     }
 }

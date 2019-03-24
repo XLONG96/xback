@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "reponses")
+@Table(name = "responses")
 public class Response implements Serializable {
     @Id
     @GeneratedValue

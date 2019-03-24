@@ -26,7 +26,7 @@
 <body>
 <header class="navbar-wrapper">
 	<div class="navbar navbar-fixed-top">
-		<div class="container-fluid cl"> <a class="logo navbar-logo f-l mr-10 hidden-xs" href="/">XRPC.Monitor</a> <a class="logo navbar-logo-m f-l mr-10 visible-xs" href="/">H-ui</a>
+		<div class="container-fluid cl"> <a class="logo navbar-logo f-l mr-10 hidden-xs" href="/">XRPC.Monitor</a>
 			<span class="logo navbar-slogan f-l mr-10 hidden-xs">v1.0</span>
 			<a aria-hidden="false" class="nav-toggle Hui-iconfont visible-xs" href="javascript:;">&#xe667;</a>
 
@@ -34,11 +34,11 @@
 			<ul class="cl">
 				<li>超级管理员</li>
 				<li class="dropDown dropDown_hover">
-					<a href="#" class="dropDown_A">admin <i class="Hui-iconfont">&#xe6d5;</i></a>
+					<a href="#" class="dropDown_A"><span id="username">admin</span><i class="Hui-iconfont">&#xe6d5;</i></a>
 					<ul class="dropDown-menu menu radius box-shadow">
 						<li><a href="javascript:;" onClick="myselfinfo()">个人信息</a></li>
-						<li><a href="#">切换账户</a></li>
-						<li><a href="#">退出</a></li>
+						<li><a href="/logout">切换账户</a></li>
+						<li><a href="/logout">退出</a></li>
 				</ul>
 			</li>
 				<li id="Hui-skin" class="dropDown right dropDown_hover"> <a href="javascript:;" class="dropDown_A" title="换肤"><i class="Hui-iconfont" style="font-size:18px">&#xe62a;</i></a>
@@ -92,13 +92,9 @@
 			<dt><i class="Hui-iconfont">&#xe61a;</i> 系统统计<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
-					<li><a data-href="charts-column.html" data-title="柱状图" href="javascript:void(0)">柱状图</a></li>
-					<li><a data-href="charts-pie.html" data-title="饼状图" href="javascript:void(0)">饼状图</a></li>
-					<li><a data-href="charts-1.html" data-title="折线图" href="javascript:void(0)">折线图</a></li>
-					<li><a data-href="charts-2.html" data-title="时间轴折线图" href="javascript:void(0)">时间轴折线图</a></li>
-					<li><a data-href="charts-3.html" data-title="区域图" href="javascript:void(0)">区域图</a></li>
-					<li><a data-href="charts-6.html" data-title="3D柱状图" href="javascript:void(0)">3D柱状图</a></li>
-					<li><a data-href="charts-7.html" data-title="3D饼状图" href="javascript:void(0)">3D饼状图</a></li>
+					<li><a data-href="charts-nodes.html" data-title="结点统计" href="javascript:void(0)">结点统计</a></li>
+					<li><a data-href="charts-pie.html" data-title="结点数量占比统计" href="javascript:void(0)">结点数量占比统计</a></li>
+					<li><a data-href="charts-services.html" data-title="服务调用与响应数量统计" href="javascript:void(0)">服务调用与响应数量统计</a></li>
 			</ul>
 		</dd>
 	</dl>
@@ -139,34 +135,76 @@
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript" src="/lib/jquery.contextmenu/jquery.contextmenu.r2.js"></script>
 <script type="text/javascript">
-$(function(){
-	/*$("#min_title_list li").contextMenu('Huiadminmenu', {
-		bindings: {
-			'closethis': function(t) {
-				console.log(t);
-				if(t.find("i")){
-					t.find("i").trigger("click");
-				}		
-			},
-			'closeall': function(t) {
-				alert('Trigger was '+t.id+'\nAction was Email');
-			},
-		}
-	});*/
-});
-/*个人信息*/
-function myselfinfo(){
-	layer.open({
-		type: 1,
-		area: ['300px','200px'],
-		fix: false, //不固定
-		maxmin: true,
-		shade:0.4,
-		title: '查看信息',
-		content: '<div>管理员信息</div>'
-	});
-}
+	var username;
+	var sex;
+	var email;
+	var phone;
+	var loginCount;
+	var role;
 
+    $.ajax({
+        url: "api/user-info",
+        type: "GET",
+        success: callback,
+        error: function (xhr, info) {
+            alert(xhr.status + " " + xhr.statusText + " " + info);
+        }
+    });
+
+    function callback(data) {
+        username = data.username;
+        sex = data.sex;
+        if (sex == 0) {
+            sex = "男";
+        } else {
+            sex = "女";
+        }
+        email = data.email;
+        phone = data.phone;
+        role = data.role;
+        loginCount = data.loginCount;
+        $('#username').text(username);
+    }
+
+    /*个人信息*/
+    function myselfinfo(){
+		layer.open({
+			type: 1,
+			area: ['600px', '400px'],
+			fix: false, //不固定
+			maxmin: true,
+			shade: 0.4,
+			title: '个人信息',
+			content: '<table class="table table-border table-bordered table-bg mt-20">\n' +
+				'<tbody>\n' +
+				'<tr>\n' +
+				'<th width="30%">用户名</th>\n' +
+				'<td>' + username + '</td>\n' +
+				'</tr>\n' +
+				'<tr>\n' +
+				'<th>性别</th>\n' +
+				'<td>' + sex + '</td>\n' +
+				'</tr>\n' +
+				'<tr>\n' +
+				'<th>email</th>\n' +
+				'<td>' + email + '</td>\n' +
+				'</tr>\n' +
+				'<tr>\n' +
+				'<th>手机</th>\n' +
+				'<td>' + phone + '</td>\n' +
+				'</tr>\n' +
+				'<tr>\n' +
+				'<th>角色</th>\n' +
+				'<td>' + role + '</td>\n' +
+				'</tr>\n' +
+				'<tr>\n' +
+				'<th>登录次数</th>\n' +
+				'<td>' + loginCount + '</td>\n' +
+				'</tr>\n' +
+				'</tbody>\n' +
+				'\t</table>'
+		});
+    }
 </script> 
 </body>
 </html>

@@ -19,10 +19,10 @@
 <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
-<title>柱状图统计</title>
+<title>结点统计</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 系统统计 <span class="c-gray en">&gt;</span> 柱状图统计 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 系统统计 <span class="c-gray en">&gt;</span> 结点数量占比统计 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<div id="container" styleq="min-width:700px;height:400px"></div>
 </div>
@@ -37,11 +37,8 @@
 <script type="text/javascript" src="lib/hcharts/Highcharts/5.0.6/js/modules/exporting.js"></script>
 <script type="text/javascript">
 $(function () {
-    var productors = 0;
-    var consumers = 0;
-
     $.ajax({
-        url: "api/service_statics",
+        url: "api/node-statics",
         type: "GET",
         success: callback,
         error: function (xhr, info) {
@@ -55,45 +52,45 @@ $(function () {
 
         var statics = {"productors" : productors, "consumers" : consumers};
         console.log(statics);
-    }
 
-	$('#container').highcharts({
-		chart: {
-			type: 'column'
-		},
-		title: {
-			text: '服务生产者与服务消费者数量占比情况统计'
-		},
-		subtitle: {
-			text: '来源：注册与发现中心'
-		},
-		xAxis: {
-			type: 'category',
-			labels: {
-				style: {
-					fontSize: '13px',
-					fontFamily: 'Verdana, sans-serif'
-				}
-			}
-		},
-		yAxis: {
-			min: 0,
-			title: {
-				text: '个数'
-			}
-		},
-		tooltip: {
-			pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-				'<td style="padding:0"><b>{point.y:.1f} 个</b></td></tr>'
-		},
-		series: [{
-			name: '结点数',
-			data: [
-				['服务生产者', productors],
-				['服务消费者', consumers]
-			]
-		}]
-	});
+        $('#container').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: '服务生产者与服务消费者数量占比统计'
+            },
+            subtitle: {
+                text: '来源：注册与发现中心'
+            },
+            xAxis: {
+                type: 'category',
+                labels: {
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: '个数'
+                }
+            },
+            tooltip: {
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y:.1f} 个</b></td></tr>'
+            },
+            series: [{
+                name: '结点数',
+                data: [
+                    ['服务生产者', productors],
+                    ['服务消费者', consumers]
+                ]
+            }]
+        });
+    }
 });
 </script>
 </body>

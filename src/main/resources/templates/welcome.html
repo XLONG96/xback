@@ -24,8 +24,8 @@
 <body>
 <div class="page-container">
 	<p class="f-20 text-success">欢迎使用 XRPC.Monitor <span class="f-14">v1.0</span></p>
-	<p>登录次数：18 </p>
-	<p>上次登录IP：222.35.131.79.1  上次登录时间：2014-6-14 11:19:55</p>
+	<p>登录次数：<span id="login-count"></span></p>
+	<p>上次登录IP：192.168.1.2      上次登录时间：<span id="last-login-time"></span></p>
 
 	<table class="table table-border table-bordered table-bg mt-20">
 		<thead>
@@ -44,7 +44,7 @@
 			</tr>
 			<tr>
 				<td>服务器域名</td>
-				<td>www.h-ui.net</td>
+				<td>www.xrpc.net</td>
 			</tr>
 			<tr>
 				<td>服务器端口 </td>
@@ -52,11 +52,11 @@
 			</tr>
 			<tr>
 				<td>服务器IIS版本 </td>
-				<td>Microsoft-IIS/6.0</td>
+				<td>Microsoft-IIS/7.0</td>
 			</tr>
 			<tr>
 				<td>本文件所在文件夹 </td>
-				<td>D:\WebSite\HanXiPuTai.com\XinYiCMS.Web\</td>
+				<td>D:\WebSite\xrpc.com\</td>
 			</tr>
 			<tr>
 				<td>服务器操作系统 </td>
@@ -80,15 +80,11 @@
 			</tr>
 			<tr>
 				<td>服务器当前时间 </td>
-				<td>2014-6-14 12:06:23</td>
+				<td id="current-time"></td>
 			</tr>
 			<tr>
 				<td>服务器IE版本 </td>
 				<td>6.0000</td>
-			</tr>
-			<tr>
-				<td>服务器上次启动到现在已运行 </td>
-				<td>7210分钟</td>
 			</tr>
 			<tr>
 				<td>逻辑驱动器 </td>
@@ -115,14 +111,6 @@
 				<td>51.46M</td>
 			</tr>
 			<tr>
-				<td>当前Session数量 </td>
-				<td>8</td>
-			</tr>
-			<tr>
-				<td>当前SessionID </td>
-				<td>gznhpwmp34004345jz2q3l45</td>
-			</tr>
-			<tr>
 				<td>当前系统用户名 </td>
 				<td>NETWORK SERVICE</td>
 			</tr>
@@ -138,5 +126,60 @@
 </footer>
 <script type="text/javascript" src="/lib/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript">
+    /* 时间格式化 */
+    Date.prototype.Format = function (fmt) { //author: meizz
+
+        var o = {
+            "M+": this.getMonth() + 1, //月份
+
+            "d+": this.getDate(), //日
+
+            "h+": this.getHours(), //小时
+
+            "m+": this.getMinutes(), //分
+
+            "s+": this.getSeconds(), //秒
+
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+
+            "S": this.getMilliseconds() //毫秒
+
+        };
+        if (/(y+)/.test(fmt)) {
+            fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        }
+        for (var k in o) {
+            if (new RegExp("(" + k + ")").test(fmt)) {
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            }
+        }
+        return fmt;
+    };
+
+    $(function () {
+        var currentTime = new Date();
+        $('#current-time').text(currentTime.Format("yyyy-MM-dd hh:mm:ss"));
+
+        $.ajax({
+            url: "api/user-info",
+            type: "GET",
+            success: callback,
+            error: function (xhr, info) {
+                alert(xhr.status + " " + xhr.statusText + " " + info);
+            }
+        });
+
+        function callback(data) {
+            lastLogin = data.lastLogin;
+            if (lastLogin == null || lastLogin == "") {
+                lastLogin = currentTime;
+			}
+			lastLogin = lastLogin.Format("yyyy-MM-dd hh:mm:ss");
+			$('#last-login-time').text(lastLogin);
+			$('#login-count').text(data.loginCount);
+        }
+    });
+</script>
 </body>
 </html>
