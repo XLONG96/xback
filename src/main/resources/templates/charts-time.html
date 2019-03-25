@@ -103,7 +103,6 @@
         });
 
         function callback(data) {
-            //
             $('#container').highcharts({
                 chart: {
                     type: 'area'
@@ -115,17 +114,16 @@
                     text: '来源： ' + year + '年' + month + '月统计日志'
                 },
                 xAxis: {
-                    categories:['e3432','455dd','34dfd','565ff','34sdf','23234','dsddf', 'sdds2']
+                    categories:data.headId
                 },
                 yAxis: {
                     title: {
                         text: '调用与响应时间差（秒/s）'
                     }
                 },
-
                 series: [{
                     name: '时间差',
-                    data: [0, 0, 0, 0, 0, 0.23, 0.11, 0.32, 0.0, 0.5, 0.369]
+                    data: data.diffs
                 }]
             });
         }

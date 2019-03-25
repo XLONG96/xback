@@ -8,6 +8,8 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository
 public interface RequestRepository extends PagingAndSortingRepository<Request, Integer> {
@@ -16,4 +18,8 @@ public interface RequestRepository extends PagingAndSortingRepository<Request, I
     @Query(value = "SELECT count(*) FROM requests r where year(r.requestTime)=:year " +
             "and month(r.requestTime) =:month", nativeQuery = true)
     Integer getCountByYearAndMonth(@Param("year") Integer year, @Param("month") Integer month);
+
+    @Query(value = "SELECT * FROM requests r where year(r.requestTime)=:year " +
+            "and month(r.requestTime) =:month", nativeQuery = true)
+    List<Request> findAllByYearAndMonth(@Param("year") Integer year, @Param("month") Integer month);
 }

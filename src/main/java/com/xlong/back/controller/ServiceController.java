@@ -1,9 +1,6 @@
 package com.xlong.back.controller;
 
-import com.xlong.back.entity.Consumer;
-import com.xlong.back.entity.Page;
-import com.xlong.back.entity.Producter;
-import com.xlong.back.entity.Request;
+import com.xlong.back.entity.*;
 import com.xlong.back.repository.RequestRepository;
 import com.xlong.back.repository.ResponseRepository;
 import com.xlong.back.zk.ProZKClient;
@@ -18,10 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api")
@@ -170,8 +164,28 @@ public class ServiceController {
     }
 
     @RequestMapping(value="/service-time-statics", method=RequestMethod.GET)
-    public Map<String, List<Integer>> serviceTimeStatics(@RequestParam(value = "year") Integer year,
+    public Map<String, List<Object>> serviceTimeStatics(@RequestParam(value = "year") Integer year,
                                                          @RequestParam(value = "month") Integer month) {
-        return null;
+        Map<String, List<Object>> map = new HashMap<>();
+        List<Request> requests = requestRepository.findAllByYearAndMonth(year, month);
+        List<Object> headId = new ArrayList<>();
+        List<Object> diffs = new ArrayList<>();
+
+        for (Request r : requests) {
+            String id = r.getRequestId();
+            headId.add(id.substring(0, 5));
+            Response response = responseRepository.findByRequestId(id);
+            if (response != null) {
+                Date questTime = r.getRequestTime();
+                Date qesponseTime = response.getResponseTime();
+                diffs.add((qesponseTime.getTime() - questTime.getTime()) / 1000);
+            } else {
+                diffs.add(null);
+            }
+        }
+
+        map.put("headId", headId);
+        map.put("diffs", diffs);
+        return map;
     }
 }
